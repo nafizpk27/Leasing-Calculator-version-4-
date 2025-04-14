@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leasing Calculator</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="leasing CSS-2.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+</head>
+<style>
+    /* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #FFF8E7;
+  color: #5D4037;
+  line-height: 1.6;
+  overflow-x: hidden;
+  animation: fadeInPage 1.5s ease forwards;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(to bottom, #4CAF50 0%, #81C784 100%);
+  color: #FFF;
+  text-align: center;
+  padding: 80px 20px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%23FFF8E7" fill-opacity="0.2" d="M0,160L80,186.7C160,213,320,267,480,266.7C640,267,800,213,960,192C1120,171,1280,181,1360,186.7L1440,192L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"%3E%3C/path%3E%3C/svg%3E') bottom;
+  opacity: 0.3;
+}
+
+.hero-content h1 {
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  animation: sprout 1s ease forwards;
+}
+
+.hero-content p {
+  font-size: 18px;
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Card Styles */
+.calculator-card, .testimonials-card, .faq-card {
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  background: #FFF;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  position: relative;
+  animation: sprout 1s ease forwards;
+  animation-delay: calc(var(--card-index, 0) * 0.2s);
+}
+
+.calculator-card { --card-index: 1; }
+.testimonials-card { --card-index: 2; }
+.faq-card { --card-index: 3; }
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.card-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #4CAF50;
+  position: relative;
+}
+
+.card-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.card-header:hover h2::after {
+  width: 100%;
+}
+
+/* Input Group */
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #5D4037;
+  margin-bottom: 8px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.input-group label::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.input-group label:hover::after {
+  width: 100%;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background: #FFF;
+  font-size: 16px;
+  color: #5D4037;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  outline: none;
+}
+
+.input-group input.error {
+  border-color: #D32F2F;
+  animation: shake 0.3s ease;
+}
+
+/* Results Table */
+.results-table {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+.finance-table, .compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #FFF;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.finance-table th, .finance-table td,
+.compare-table th, .compare-table td {
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.finance-table th, .compare-table th {
+  background: #4CAF50;
+  color: #FFF;
+  font-weight: 600;
+}
+
+.finance-table td:first-child,
+.compare-table td:first-child {
+  background: #F1F8E9;
+  font-weight: 600;
+}
+
+.finance-table tbody tr:hover,
+.compare-table tbody tr:hover {
+  background: #F5F5F5;
+}
+
+.finance-table td.highlight {
+  background: #81C784;
+  color: #FFF;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+/* Quick Compare */
+.quick-compare {
+  margin: 20px 0;
+}
+
+.compare-inputs {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.compare-inputs .input-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4CAF50;
+  color: #FFF;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 10;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary {
+  position: relative;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: #4CAF50;
+  color: #FFF;
+}
+
+.btn-secondary {
+  background: #5D4037;
+  color: #FFF;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active, .btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-primary::before, .btn-secondary::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+.btn-primary:hover::before, .btn-secondary:hover::before {
+  width: 200px;
+  height: 200px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease;
+  overflow: auto; /* Allow scrolling */
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.5s ease;
+  max-height: 80vh; /* Limit height */
+  overflow-y: auto; /* Allow vertical scrolling */
+  position: center;
+}
+
+.close {
+  float: right;
+  font-size: 24px;
+  color: #5D4037;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #4CAF50;
+}
+
+.modal-content h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+/* Floating CTA */
+.floating-cta {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+}
+
+.floating-btn {
+  background: #4CAF50;
+  color: #FFF;
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode Toggle */
+.dark-mode-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #5D4037;
+  cursor: pointer;
+  z-index: 1000;
+  transition: color 0.3s ease;
+}
+
+.dark-mode-btn:hover {
+  color: #4CAF50;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background: #3E2723;
+  color: #FFF8E7;
+}
+
+body.dark-mode .hero-section {
+  background: linear-gradient(to bottom, #2E7D32 0%, #4CAF50 100%);
+}
+
+body.dark-mode .calculator-card,
+body.dark-mode .testimonials-card,
+body.dark-mode .faq-card,
+body.dark-mode .modal-content {
+  background: #4E342E;
+  color: #FFF8E7;
+}
+
+body.dark-mode .input-group input {
+  background: #5D4037;
+  border-color: #FFF8E7;
+  color: #FFF8E7;
+}
+
+body.dark-mode .finance-table th,
+body.dark-mode .compare-table th {
+  background: #2E7D32;
+}
+
+body.dark-mode .finance-table td,
+body.dark-mode .compare-table td {
+  background: #4E342E;
+  border-color: #FFF8E7;
+}
+
+body.dark-mode .finance-table td:first-child,
+body.dark-mode .compare-table td:first-child {
+  background: #33691E;
+}
+
+body.dark-mode .testimonial,
+body.dark-mode .faq-answer {
+  background: #5D4037;
+  border-color: #FFF8E7;
+}
+
+body.dark-mode .faq-question {
+  background: #2E7D32;
+}
+
+body.dark-mode .dark-mode-btn {
+  color: #FFF8E7;
+}
+
+/* Testimonials */
+.testimonial-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.testimonial {
+  background: #F1F8E9;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.testimonial:hover {
+  transform: translateY(-5px);
+}
+
+.testimonial p {
+  font-size: 14px;
+  font-style: italic;
+  margin-bottom: 10px;
+  color: #5D4037;
+}
+
+.testimonial span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4CAF50;
+}
+
+/* FAQ */
+.faq-item {
+  margin-bottom: 15px;
+}
+
+.faq-question {
+  background: #4CAF50;
+  color: #FFF;
+  padding: 14px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+  background: #388E3C;
+}
+
+.faq-question.active {
+  border-radius: 8px 8px 0 0;
+}
+
+.faq-answer {
+  background: #F1F8E9;
+  padding: 15px;
+  border-radius: 0 0 8px 8px;
+  font-size: 14px;
+}
+
+/* Animations */
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sprout {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 32px;
+  }
+
+  .hero-content p {
+    font-size: 16px;
+  }
+
+  .calculator-card, .testimonials-card, .faq-card {
+    padding: 20px;
+  }
+
+  .compare-inputs {
+    flex-direction: column;
+  }
+
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .modal-content {
+    margin: 20% auto;
+  }
+}
+</style>
+<body>
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1>Interscale Leasing Solutions</h1>
+      <p>Grow your business with seamless financing calculations.</p>
+    </div>
+  </header>
+
+  <!-- Main Calculator Card -->
+  <section class="calculator-card">
+    <div class="card-header">
+      <h2>Payment Planner</h2>
+    </div>
+    <form id="leasing-form">
+      <div class="input-group">
+        <label for="invoice-amount">Invoice Amount (ex GST)</label>
+        <input type="text" id="invoice-amount" name="invoice-amount" placeholder="$0.00" required>
+      </div>
+
+      <div class="results-table">
+        <table class="finance-table">
+          <thead>
+            <tr>
+              <th>Term</th>
+              <th><span class="tooltip" data-tooltip="Monthly payment for 12 months">12 months</span></th>
+              <th><span class="tooltip" data-tooltip="Monthly payment for 24 months">24 months</span></th>
+              <th><span class="tooltip" data-tooltip="Monthly payment for 36 months">36 months</span></th>
+              <th><span class="tooltip" data-tooltip="Monthly payment for 48 months">48 months</span></th>
+              <th><span class="tooltip" data-tooltip="Monthly payment for 60 months">60 months</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Payment</td>
+              <td id="payment-12">$0.00</td>
+              <td id="payment-24">$0.00</td>
+              <td id="payment-36">$0.00</td>
+              <td id="payment-48">$0.00</td>
+              <td id="payment-60">$0.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Quick Compare Tool -->
+      <div class="quick-compare">
+        <button type="button" id="toggle-compare" class="btn-secondary">Quick Compare</button>
+        <div id="compare-container" style="display: none; margin-top: 20px;">
+          <div class="compare-inputs">
+            <div class="input-group">
+              <label for="compare-amount-1">Amount 1 (ex GST)</label>
+              <input type="text" id="compare-amount-1" placeholder="$0.00">
+            </div>
+            <div class="input-group">
+              <label for="compare-amount-2">Amount 2 (ex GST)</label>
+              <input type="text" id="compare-amount-2" placeholder="$0.00">
+            </div>
+          </div>
+          <div class="results-table">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th>Term</th>
+                  <th id="compare-header-1">Amount 1</th>
+                  <th id="compare-header-2">Amount 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>12 Months</td>
+                  <td id="compare-12-1">$0.00</td>
+                  <td id="compare-12-2">$0.00</td>
+                </tr>
+                <tr>
+                  <td>24 Months</td>
+                  <td id="compare-24-1">$0.00</td>
+                  <td id="compare-24-2">$0.00</td>
+                </tr>
+                <tr>
+                  <td>36 Months</td>
+                  <td id="compare-36-1">$0.00</td>
+                  <td id="compare-36-2">$0.00</td>
+                </tr>
+                <tr>
+                  <td>48 Months</td>
+                  <td id="compare-48-1">$0.00</td>
+                  <td id="compare-48-2">$0.00</td>
+                </tr>
+                <tr>
+                  <td>60 Months</td>
+                  <td id="compare-60-1">$0.00</td>
+                  <td id="compare-60-2">$0.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="loadingSpinner" style="display: none; text-align: center;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #4CAF50;"></i>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" id="send-message" class="btn-primary">Consult Expert</button>
+        <button type="button" id="download-pdf" class="btn-secondary">Download Summary</button>
+      </div>
+      <p id="successMessage" style="display: none; color: #4CAF50; font-family: Poppins; font-weight: 600; margin-top: 10px; text-align: center;">
+        Form submitted successfully!
+      </p>
+    </form>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-card">
+    <div class="card-header">
+      <h2>Client Voices</h2>
+    </div>
+    <div class="testimonial-container">
+      <div class="testimonial">
+        <p>"This calculator feels like a breath of fresh air. So easy to use!"</p>
+        <span>- Handy Kosasih,
+          Managing Director</span>
+      </div>
+      <div class="testimonial">
+        <p>"A natural fit for our financing needs. Highly recommended."</p>
+        <span>- Marcus NG,
+Account Executive</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-card">
+    <div class="card-header">
+      <h2>Common Questions</h2>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">What’s included in the monthly payment?</button>
+      <div class="faq-answer" style="display: none;">
+        <p>The monthly payment covers the lease amount based on the invoice value, excluding GST. Additional fees may apply depending on your agreement.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Can I customize lease terms?</button>
+      <div class="faq-answer" style="display: none;">
+        <p>Absolutely, our experts can tailor terms to fit your needs. Contact us to explore options.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal for Expert Consultation -->
+  <div id="modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">×</span>
+      <h3>Connect with Our Expert</h3>
+      <form id="modal-leasing-form" action="send_email.php" method="POST">
+        <div class="input-group">
+          <label for="modal-invoice-amount">Invoice Amount (ex GST)</label>
+          <input type="text" name="modal-invoice-amount" id="modal-invoice-amount" readonly required>
+        </div>
+        <div class="input-group">
+          <label for="modal-customer-name">Name</label>
+          <input type="text" name="modal-customer-name" id="modal-customer-name" required>
+        </div>
+        <div class="input-group">
+          <label for="modal-email">Email</label>
+          <input type="email" name="modal-email" id="modal-email" required>
+        </div>
+        <div class="input-group">
+          <label for="modal-phone">Phone</label>
+          <input type="tel" name="modal-phone" id="modal-phone" required>
+        </div>
+        <div class="input-group">
+          <label for="modal-company">Company</label>
+          <input type="text" name="modal-company" id="modal-company" required>
+        </div>
+        <button type="submit" id="modal-send-message" class="btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating CTA -->
+  <div class="floating-cta">
+    <button class="floating-btn"><i class="fas fa-leaf"></i> Need Help?</button>
+  </div>
+
+  <!-- Dark Mode Toggle -->
+  <button id="dark-mode-toggle" class="dark-mode-btn"><i class="fas fa-moon"></i></button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function calculatePayments(invoiceAmount, prefix = "payment") {
+        invoiceAmount = parseFloat(invoiceAmount.replace(/[^0-9.]/g, '')) || 0;
+        let LRF = {
+          "10000-49999": { "12M": 0.09035, "24M": 0.04725, "36M": 0.03292, "48M": 0.02578, "60M": 0.02152 },
+          "50000-199999": { "12M": 0.09005, "24M": 0.04692, "36M": 0.03258, "48M": 0.02543, "60M": 0.02116 },
+          "200000-499999": { "12M": 0.08975, "24M": 0.04660, "36M": 0.03224, "48M": 0.02508, "60M": 0.02080 },
+          "500001+": { "12M": 0.08969, "24M": 0.04653, "36M": 0.03217, "48M": 0.02501, "60M": 0.02073 }
+        };
+
+        let selectedLRF;
+        if (invoiceAmount >= 10000 && invoiceAmount <= 49999) selectedLRF = LRF["10000-49999"];
+        else if (invoiceAmount >= 50000 && invoiceAmount <= 199999) selectedLRF = LRF["50000-199999"];
+        else if (invoiceAmount >= 200000 && invoiceAmount <= 499999) selectedLRF = LRF["200000-499999"];
+        else selectedLRF = LRF["500001+"];
+
+        ['12', '24', '36', '48', '60'].forEach(term => {
+          document.getElementById(`${prefix}-${term}`).textContent = "$" + (invoiceAmount * selectedLRF[`${term}M`]).toFixed(2);
+        });
+
+        // Highlight lowest payment for main table
+        if (prefix === "payment") {
+          ['12', '24', '36', '48', '60'].forEach(term => {
+            document.getElementById(`payment-${term}`).classList.remove('highlight');
+          });
+          const payments = {
+            12: parseFloat(document.getElementById("payment-12").textContent.replace('$', '')),
+            24: parseFloat(document.getElementById("payment-24").textContent.replace('$', '')),
+            36: parseFloat(document.getElementById("payment-36").textContent.replace('$', '')),
+            48: parseFloat(document.getElementById("payment-48").textContent.replace('$', '')),
+            60: parseFloat(document.getElementById("payment-60").textContent.replace('$', '')),
+          };
+          const minTerm = Object.keys(payments).reduce((a, b) => payments[a] < payments[b] ? a : b);
+          document.getElementById(`payment-${minTerm}`).classList.add('highlight');
+        }
+      }
+
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
+      }
+
+      // Initialize default value
+      document.getElementById("invoice-amount").value = "$50,000.00";
+      calculatePayments(document.getElementById("invoice-amount").value);
+
+      // Real-time input validation for main calculator
+      document.getElementById("invoice-amount").addEventListener("input", function () {
+        let input = this.value.replace(/[^0-9.]/g, '');
+        let floatVal = parseFloat(input);
+        if (isNaN(floatVal) || floatVal < 0) {
+          this.classList.add('error');
+          this.value = '';
+          calculatePayments(this.value);
+        } else {
+          this.classList.remove('error');
+          this.value = input;
+          calculatePayments(this.value);
+        }
+      });
+
+      document.getElementById("invoice-amount").addEventListener("blur", function () {
+        let floatVal = parseFloat(this.value);
+        if (!isNaN(floatVal)) {
+          this.value = formatCurrency(floatVal);
+        }
+      });
+
+      // Quick Compare Tool
+      document.getElementById("toggle-compare").addEventListener("click", function () {
+        const compareContainer = document.getElementById("compare-container");
+        const toggleButton = document.getElementById("toggle-compare");
+        const isVisible = compareContainer.style.display === "block";
+        compareContainer.style.display = isVisible ? "none" : "block";
+        toggleButton.textContent = isVisible ? "Quick Compare" : "Hide Comparison";
+      });
+
+      // Compare input handling
+      ['1', '2'].forEach(num => {
+        const input = document.getElementById(`compare-amount-${num}`);
+        input.addEventListener("input", function () {
+          let inputVal = this.value.replace(/[^0-9.]/g, '');
+          let floatVal = parseFloat(inputVal);
+          if (isNaN(floatVal) || floatVal < 0) {
+            this.classList.add('error');
+            this.value = '';
+          } else {
+            this.classList.remove('error');
+            this.value = inputVal;
+          }
+          calculatePayments(input.value, `compare-${num}`);
+          document.getElementById(`compare-header-${num}`).textContent = `Amount ${num} (${formatCurrency(floatVal || 0)})`;
+        });
+
+        input.addEventListener("blur", function () {
+          let floatVal = parseFloat(this.value);
+          if (!isNaN(floatVal)) {
+            this.value = formatCurrency(floatVal);
+            calculatePayments(this.value, `compare-${num}`);
+            document.getElementById(`compare-header-${num}`).textContent = `Amount ${num} (${this.value})`;
+          }
+        });
+      });
+
+      // Modal popup on form submit
+      document.getElementById("leasing-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const invoiceAmount = document.getElementById("invoice-amount").value;
+        document.getElementById("modal-invoice-amount").value = invoiceAmount;
+        document.getElementById("modal").style.display = "block";
+      });
+
+      // Modal close
+      document.querySelector(".close").addEventListener("click", function () {
+        document.getElementById("modal").style.display = "none";
+      });
+
+      window.addEventListener("click", function (event) {
+        if (event.target === document.getElementById("modal")) {
+          document.getElementById("modal").style.display = "none";
+        }
+      });
+
+      // Modal form submission with validation
+      document.getElementById("modal-leasing-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const customerName = document.getElementById("modal-customer-name").value.trim();
+        const email = document.getElementById("modal-email").value.trim();
+        const phone = document.getElementById("modal-phone").value.trim();
+        const company = document.getElementById("modal-company").value.trim();
+
+        if (!customerName || !email || !phone || !company) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+          alert("Please enter a valid email address.");
+          return;
+        }
+
+        if (!/^\d{10}$/.test(phone.replace(/\D/g, ''))) {
+          alert("Please enter a valid 10-digit phone number.");
+          return;
+        }
+
+        const submitButton = document.getElementById("modal-send-message");
+        const loader = document.getElementById("loadingSpinner");
+        const successMessage = document.getElementById("successMessage");
+
+        loader.style.display = "inline-block";
+        submitButton.disabled = true;
+
+        const formData = new FormData(this);
+
+        fetch("send_email.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then(res => {
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.text();
+          })
+          .then(data => {
+            console.log("Response from server:", data);
+            loader.style.display = "none";
+            submitButton.disabled = false;
+            document.getElementById("modal").style.display = "none";
+            document.getElementById("modal-leasing-form").reset();
+            successMessage.style.display = "block";
+            setTimeout(() => successMessage.style.display = "none", 5000);
+          })
+          .catch(err => {
+            console.error("Error during form submission:", err);
+            alert("There was an error submitting the form. Please try again.");
+            loader.style.display = "none";
+            submitButton.disabled = false;
+          });
+      });
+
+      // Floating CTA
+      document.querySelector('.floating-btn').addEventListener('click', () => {
+        document.getElementById('modal').style.display = 'block';
+      });
+
+      // Dark Mode Toggle
+      document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('dark-mode-toggle').innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      });
+
+      // FAQ Toggle
+      document.querySelectorAll('.faq-question').forEach(button => {
+        button.addEventListener('click', () => {
+          const answer = button.nextElementSibling;
+          const isVisible = answer.style.display === 'block';
+          answer.style.display = isVisible ? 'none' : 'block';
+          button.classList.toggle('active', !isVisible);
+        });
+      });
+
+      // jsPDF Integration
+      const pdfScript = document.createElement('script');
+      pdfScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      document.head.appendChild(pdfScript);
+
+      pdfScript.onload = () => {
+        const { jsPDF } = window.jspdf;
+
+        document.getElementById('download-pdf').addEventListener('click', () => {
+          const doc = new jsPDF();
+          const invoiceAmount = document.getElementById('invoice-amount').value;
+          const payments = {
+            '12 Months': document.getElementById('payment-12').textContent,
+            '24 Months': document.getElementById('payment-24').textContent,
+            '36 Months': document.getElementById('payment-36').textContent,
+            '48 Months': document.getElementById('payment-48').textContent,
+            '60 Months': document.getElementById('payment-60').textContent,
+          };
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(16);
+          doc.text('Leasing Payment Summary', 20, 20);
+
+          doc.setFontSize(12);
+          doc.setFont('helvetica', 'normal');
+          doc.text(`Invoice Amount (ex GST): ${invoiceAmount}`, 20, 30);
+
+          let y = 40;
+          doc.setFont('helvetica', 'bold');
+          doc.text('Monthly Payments:', 20, y);
+          y += 10;
+          doc.setFont('helvetica', 'normal');
+          for (const [term, payment] of Object.entries(payments)) {
+            doc.text(`${term}: ${payment}`, 20, y);
+            y += 10;
+          }
+
+          doc.save('leasing_summary.pdf');
+        });
+      };
+    });
+    
+  </script>
+</body>
+</html>
